@@ -8,32 +8,53 @@ import org.junit.jupiter.api.Assertions.*
 
 class StatisticsUtilsTest {
 
+    /**
+     * Kiểm thử trường hợp danh sách chỉ có nhiệm vụ chưa hoàn thành.
+     * Kết quả mong đợi:
+     * - Phần trăm nhiệm vụ đang hoạt động = 100%
+     * - Phần trăm nhiệm vụ đã hoàn thành = 0%
+     */
     @Test
     fun getActiveAndCompletedStats_noCompleted_returnsHundredZero() {
         val tasks = listOf(
             Task("title", "desc", isCompleted = false)
         )
-        // When the list of tasks is computed with an active task
+        // Khi tính toán thống kê
         val result = getActiveAndCompletedStats(tasks)
 
-        // Then the percentages are 100 and 0
+        // Kiểm tra kết quả có đúng như mong đợi không
         assertThat(result.activeTasksPercent, `is`(100f))
         assertThat(result.completedTasksPercent, `is`(0f))
     }
 
+    /**
+     * Kiểm thử trường hợp danh sách chỉ có nhiệm vụ đã hoàn thành.
+     * Kết quả mong đợi:
+     * - Phần trăm nhiệm vụ đang hoạt động = 0%
+     * - Phần trăm nhiệm vụ đã hoàn thành = 100%
+     */
     @Test
     fun getActiveAndCompletedStats_noActive_returnsZeroHundred() {
         val tasks = listOf(
             Task("title", "desc", isCompleted = true)
         )
-        // When the list of tasks is computed with a completed task
+        // Khi tính toán thống kê
         val result = getActiveAndCompletedStats(tasks)
 
-        // Then the percentages are 0 and 100
+        // Kiểm tra kết quả có đúng như mong đợi không
         assertThat(result.activeTasksPercent, `is`(0f))
         assertThat(result.completedTasksPercent, `is`(100f))
     }
 
+    /**
+     * Kiểm thử trường hợp danh sách có cả nhiệm vụ đã hoàn thành và chưa hoàn thành.
+     * Trong danh sách có:
+     * - 3 nhiệm vụ đã hoàn thành
+     * - 2 nhiệm vụ chưa hoàn thành
+     * Tổng cộng có 5 nhiệm vụ, nên:
+     * - Phần trăm nhiệm vụ đang hoạt động = (2/5) * 100 = 40%
+     * - Phần trăm nhiệm vụ đã hoàn thành = (3/5) * 100 = 60%
+     */
     @Test
     fun getActiveAndCompletedStats_both_returnsFortySixty() {
         // Given 3 completed tasks and 2 active tasks
@@ -44,30 +65,43 @@ class StatisticsUtilsTest {
             Task("title", "desc", isCompleted = false),
             Task("title", "desc", isCompleted = false)
         )
-        // When the list of tasks is computed
+        // Khi tính toán thống kê
         val result = getActiveAndCompletedStats(tasks)
 
-        // Then the result is 40-60
+        // Kiểm tra kết quả có đúng như mong đợi không
         assertThat(result.activeTasksPercent, `is`(40f))
         assertThat(result.completedTasksPercent, `is`(60f))
     }
 
+    /**
+     * Kiểm thử trường hợp truyền vào danh sách null (có thể xảy ra lỗi khi tải dữ liệu).
+     * Kết quả mong đợi:
+     * - Phần trăm nhiệm vụ đang hoạt động = 0%
+     * - Phần trăm nhiệm vụ đã hoàn thành = 0%
+     */
     @Test
     fun getActiveAndCompletedStats_error_returnsZeros() {
-        // When there's an error loading stats
+        // Khi danh sách nhiệm vụ bị null
         val result = getActiveAndCompletedStats(null)
 
-        // Both active and completed tasks are 0
+        // Kiểm tra kết quả có đúng như mong đợi không
         assertThat(result.activeTasksPercent, `is`(0f))
         assertThat(result.completedTasksPercent, `is`(0f))
     }
 
+/**
+ * Kiểm thử trường hợp danh sách nhiệm vụ rỗng.
+ * Kết quả mong đợi:
+ * - Phần trăm nhiệm vụ đang hoạt động = 0%
+ * - Phần trăm nhiệm vụ đã hoàn thành = 0%
+ **/
+
     @Test
     fun getActiveAndCompletedStats_empty_returnsZeros() {
-        // When there are no tasks
+    // Khi danh sách nhiệm vụ không có phần tử nào
         val result = getActiveAndCompletedStats(emptyList())
 
-        // Both active and completed tasks are 0
+        // Kiểm tra kết quả có đúng như mong đợi không
         assertThat(result.activeTasksPercent, `is`(0f))
         assertThat(result.completedTasksPercent, `is`(0f))
     }

@@ -14,60 +14,60 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
-@Config(sdk = [30]) // Remove when Robolectric supports SDK 31
+// Cấu hình Robolectric để sử dụng SDK 30, có thể bỏ khi hỗ trợ SDK 31
+@Config(sdk = [30])
 @RunWith(AndroidJUnit4::class)
 class TasksViewModelTest {
 
-    // Subject under test
+    // Đối tượng cần kiểm thử
     private lateinit var tasksViewModel: TasksViewModel
 
-    // Executes each task synchronously using Architecture Components.
+    // Luật này giúp cho các tác vụ LiveData được thực thi ngay lập tức khi kiểm thử
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setupViewModel() {
+        // Khởi tạo ViewModel trước mỗi bài kiểm thử
         tasksViewModel = TasksViewModel(ApplicationProvider.getApplicationContext())
     }
 
-    //Task 4
+//    // Bài kiểm thử cho Task 4
 //    @Test
 //    fun addNewTask_setsNewTaskEvent() {
 //
-//        // Given a fresh ViewModel
+//        // Cho trước một ViewModel mới
 //        val tasksViewModel = TasksViewModel(ApplicationProvider.getApplicationContext())
 //
 //        // When adding a new task
 //        tasksViewModel.addNewTask()
-//
-//        // Then the new task event is triggered
-//        // TODO test LiveData
 //    }
 
-    //Task 5
+//    //Bài kiểm thử cho Task 5
 //    @Test
 //    fun addNewTask_setsNewTaskEvent() {
-//        // Given a fresh ViewModel
+//        // Cho trước một ViewModel mới
 //        val tasksViewModel = TasksViewModel(ApplicationProvider.getApplicationContext())
 //
-//        // When adding a new task
+//        // Khi thêm một Task mới
 //        tasksViewModel.addNewTask()
 //
-//        // Then the new task event is triggered
+//        // Sau đó, lấy giá trị của LiveData newTaskEvent
 //        val value = tasksViewModel.newTaskEvent.getOrAwaitValue()
-//
+//             //Kiểm tra xem sự kiện có được kích hoạt không
 //        assertThat(value.getContentIfNotHandled(), not(nullValue()))
 //    }
-
-    // Task 6
+//
+     // Bài kiểm thử cho Task 6
     @Test
     fun addNewTask_setsNewTaskEvent() {
 
-        // When adding a new task
+        // Khi thêm một Task mới
         tasksViewModel.addNewTask()
 
-        // Then the new task event is triggered
+        // Sau đó, lấy giá trị của LiveData newTaskEvent
         val value = tasksViewModel.newTaskEvent.getOrAwaitValue()
+        // Kiểm tra xem sự kiện có được kích hoạt không
         assertThat(
             value?.getContentIfNotHandled(), (not(nullValue()))
         )
@@ -76,10 +76,10 @@ class TasksViewModelTest {
     @Test
     fun getTasksAddViewVisible() {
 
-        // When the filter type is ALL_TASKS
+        // Khi thiết lập bộ lọc là ALL_TASKS (tất cả các Task)
         tasksViewModel.setFiltering(TasksFilterType.ALL_TASKS)
 
-        // Then the "Add task" action is visible
+        // Nút "Thêm Task" cần được hiển thị
         assertThat(tasksViewModel.tasksAddViewVisible.getOrAwaitValue(), `is`(true))
     }
 
